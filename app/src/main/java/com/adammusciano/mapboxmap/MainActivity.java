@@ -2,10 +2,13 @@ package com.adammusciano.mapboxmap;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.MapboxAccountManager;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -38,9 +41,17 @@ public class MainActivity extends AppCompatActivity {
 
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(MapboxMap mapboxMap) {
+            public void onMapReady(final MapboxMap mapboxMap) {
 
                 addClusteredGeoJsonSource(mapboxMap);
+
+                mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(@NonNull LatLng point) {
+                        Toast.makeText(MainActivity.this, point.toString() + "\nZoom: " + mapboxMap.getCameraPosition().zoom, Toast.LENGTH_SHORT).show();
+
+                    }
+                });
                 // Interact with the map using mapboxMap here
 
             }
@@ -89,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < layers.length; i++) {
 
             CircleLayer circles = new CircleLayer("cluster-" + i, "earthquakes");
+
+//            Log.println(Log.DEBUG,"ZOOM LEVEL",""+mapboxMap.getCameraPosition().zoom);
+
             circles.setProperties(
                     circleColor(layers[i][1]),
                     circleRadius(70f),
