@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
+
                 addClusteredGeoJsonSource(mapboxMap);
                 // Interact with the map using mapboxMap here
 
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     new GeoJsonSource("earthquakes",
                             new URL("https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson"),
                             new GeoJsonOptions()
-                                    .withCluster(true)
+                                    .withCluster(false)
                                     .withClusterMaxZoom(15) // Max zoom to cluster points on
                                     .withClusterRadius(20) // Use small cluster radius for the heatmap look
                     )
@@ -78,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
         CircleLayer unclustered = new CircleLayer("unclustered-points", "earthquakes");
         unclustered.setProperties(
                 circleColor(Color.parseColor("#FBB03B")),
-                circleRadius(20f),
-                circleBlur(1f));
+                circleRadius(10f),
+                circleBlur(5f));
         unclustered.setFilter(
                 neq("cluster", true)
         );
